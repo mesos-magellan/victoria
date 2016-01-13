@@ -26,6 +26,8 @@ Vagrant.configure(2) do |config|
   config.vm.define "scheduler" do |scheduler|
     scheduler.vm.box = "debian/jessie64"
     scheduler.vm.provision :shell, path: "bootstrap/bootstrap.sh"
+    # Required for scheduler dependencies
+    scheduler.vm.provision :shell, path: "bootstrap/mesos.sh"
     scheduler.vm.provision :shell, path: "bootstrap/scheduler.sh"
   end
 
