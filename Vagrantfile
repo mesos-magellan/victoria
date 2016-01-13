@@ -6,6 +6,29 @@
 # backwards compatibility). Please don't change it unless you know what
 # you're doing.
 Vagrant.configure(2) do |config|
+
+  config.vm.provision "shell", inline: "echo Hello"
+
+  config.vm.define "master" do |master|
+    master.vm.box = "debian/jessie64"
+    master.vm.provision :shell, path: "bootstrap/bootstrap.sh"
+    master.vm.provision :shell, path: "bootstrap/mesos.sh"
+    master.vm.provision :shell, path: "bootstrap/master.sh"
+  end
+
+  config.vm.define "slave" do |slave|
+    slave.vm.box = "debian/jessie64"
+    slave.vm.provision :shell, path: "bootstrap/bootstrap.sh"
+    slave.vm.provision :shell, path: "bootstrap/mesos.sh"
+    slave.vm.provision :shell, path: "bootstrap/slave.sh"
+  end
+
+  config.vm.define "scheduler" do |scheduler|
+    scheduler.vm.box = "debian/jessie64"
+    scheduler.vm.provision :shell, path: "bootstrap/bootstrap.sh"
+    scheduler.vm.provision :shell, path: "bootstrap/scheduler.sh"
+  end
+
   # The most common configuration options are documented and commented below.
   # For a complete reference, please see the online documentation at
   # https://docs.vagrantup.com.
@@ -68,17 +91,4 @@ Vagrant.configure(2) do |config|
   #   sudo apt-get update
   #   sudo apt-get install -y apache2
   # SHELL
-  config.vm.provision "shell", inline: "echo Hello"
-
-  config.vm.define "master" do |master|
-    master.vm.box = "debian/jessie64"
-    master.vm.provision :shell, path: "bootstrap/bootstrap.sh"
-    master.vm.provision :shell, path: "bootstrap/master.sh"
-  end
-
-  config.vm.define "slave" do |slave|
-    slave.vm.box = "debian/jessie64"
-    slave.vm.provision :shell, path: "bootstrap/bootstrap.sh"
-    slave.vm.provision :shell, path: "bootstrap/slave.sh"
-  end
 end
