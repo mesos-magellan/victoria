@@ -28,11 +28,11 @@ Vagrant.configure(2) do |config|
   config.vm.define "agent001" do |agent001|
     agent001.vm.network :private_network, ip: "10.144.144.11"
     agent001.vm.provision :shell, path: "bootstrap/install_mesos.sh"
-    agent001.vm.provision "file", source: "bootstrap/mesos-slave", \
-      destination: "/etc/default/mesos-slave"
     agent001.vm.provision "shell", inline: <<-SHELL
       sudo chmod 777 /etc/default/mesos-slave  # XXX hack so that vagrant scp can copy file over
     SHELL
+    agent001.vm.provision "file", source: "bootstrap/mesos-slave", \
+      destination: "/etc/default/mesos-slave"
     agent001.vm.provision :shell, path: "bootstrap/agent.sh"
   end
 
