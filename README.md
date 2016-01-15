@@ -27,4 +27,4 @@ vagrant provision <name>
 
 ### Mesos
 
-Find the master at 10.144.144.10:5050
+Find the master at [10.144.144.10:5050](http://10.144.144.10:5050)
