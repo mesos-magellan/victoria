@@ -2,8 +2,8 @@
 
 ## Quick Setup
 
-* Install Vagrant
-* Install VirtualBox
+* Install [Vagrant](https://www.vagrantup.com/downloads.html)
+* Install [VirtualBox](https://www.virtualbox.org/wiki/Downloads)
 * `vagrant up`
 
 ## Usage
