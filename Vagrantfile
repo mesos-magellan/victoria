@@ -7,28 +7,35 @@
 # you're doing.
 Vagrant.configure(2) do |config|
 
-  config.vm.provision "shell", inline: "echo Hello"
+  config.vm.box = "debian/jessie64"
+  # https://github.com/mitchellh/vagrant/issues/1673
+  config.ssh.shell = "bash -c 'BASH_ENV=/etc/profile exec bash'"
 
-  config.vm.define "master" do |master|
-    master.vm.box = "debian/jessie64"
-    master.vm.provision :shell, path: "bootstrap/bootstrap.sh"
-    master.vm.provision :shell, path: "bootstrap/mesos.sh"
-    master.vm.provision :shell, path: "bootstrap/master.sh"
+  config.vm.provider "virtualbox" do |v|
+    v.memory = 512
+    v.cpus = 1
   end
 
-  config.vm.define "slave" do |slave|
-    slave.vm.box = "debian/jessie64"
-    slave.vm.provision :shell, path: "bootstrap/bootstrap.sh"
-    slave.vm.provision :shell, path: "bootstrap/mesos.sh"
-    slave.vm.provision :shell, path: "bootstrap/slave.sh"
+  config.vm.provision "shell", inline: "echo Hello"
+  config.vm.provision :shell, path: "bootstrap/bootstrap.sh"
+
+  config.vm.define "master" do |master|
+    master.vm.provision :shell, path: "bootstrap/mesos.sh"
+    master.vm.provision :shell, path: "bootstrap/master.sh"
+    master.vm.network :private_network, ip: "10.144.144.10"
+  end
+
+  config.vm.define "agent001" do |agent001|
+    agent001.vm.provision :shell, path: "bootstrap/mesos.sh"
+    agent001.vm.provision :shell, path: "bootstrap/agent.sh"
+    agent001.vm.network :private_network, ip: "10.144.144.11"
   end
 
   config.vm.define "scheduler" do |scheduler|
-    scheduler.vm.box = "debian/jessie64"
-    scheduler.vm.provision :shell, path: "bootstrap/bootstrap.sh"
-    # Required for scheduler dependencies
+    # We need to install mesos because of required scheduler dependencies
     scheduler.vm.provision :shell, path: "bootstrap/mesos.sh"
     scheduler.vm.provision :shell, path: "bootstrap/scheduler.sh"
+    scheduler.vm.network :private_network, ip: "10.144.144.12"
   end
 
   # The most common configuration options are documented and commented below.
