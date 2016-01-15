@@ -34,6 +34,7 @@ Vagrant.configure(2) do |config|
     agent001.vm.provision "file", source: "bootstrap/mesos-slave", \
       destination: "/etc/default/mesos-slave"
     agent001.vm.provision :shell, path: "bootstrap/agent.sh"
+    scheduler.vm.synced_folder "../enrique", "/home/vagrant/enrique"
   end
 
   config.vm.define "scheduler" do |scheduler|
@@ -41,6 +42,7 @@ Vagrant.configure(2) do |config|
     # We need to install mesos because of required scheduler dependencies
     scheduler.vm.provision :shell, path: "bootstrap/install_mesos.sh"
     scheduler.vm.provision :shell, path: "bootstrap/scheduler.sh"
+    scheduler.vm.synced_folder "../faleiro", "/home/vagrant/faleiro"
   end
 
   # The most common configuration options are documented and commented below.
