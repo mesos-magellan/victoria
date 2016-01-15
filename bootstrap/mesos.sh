@@ -1,5 +1,8 @@
 # https://mesosphere.com/downloads/
 
+# XXX  https://serverfault.com/questions/500764/dpkg-reconfigure-unable-to-re-open-stdin-no-file-or-directory
+export DEBIAN_FRONTEND=noninteractive
+
 # Setup
 sudo apt-key adv --keyserver keyserver.ubuntu.com --recv E56151BF
 DISTRO=$(lsb_release -is | tr '[:upper:]' '[:lower:]')

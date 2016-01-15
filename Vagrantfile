@@ -8,7 +8,7 @@
 Vagrant.configure(2) do |config|
 
   config.vm.box = "debian/jessie64"
-  # https://github.com/mitchellh/vagrant/issues/1673
+  # XXX Hack to fix https://github.com/mitchellh/vagrant/issues/1673
   config.ssh.shell = "bash -c 'BASH_ENV=/etc/profile exec bash'"
 
   config.vm.provider "virtualbox" do |v|
@@ -28,6 +28,8 @@ Vagrant.configure(2) do |config|
   config.vm.define "agent001" do |agent001|
     agent001.vm.provision :shell, path: "bootstrap/mesos.sh"
     agent001.vm.provision :shell, path: "bootstrap/agent.sh"
+    agent001.vm.provision "file", source: "bootstrap/mesos-slave", \
+      destination: "/etc/default/mesos-slave"
     agent001.vm.network :private_network, ip: "10.144.144.11"
   end
 

@@ -1,4 +1,4 @@
 #!/bin/sh
 
-# apt-get update
-# apt-get install htop
+apt-get update
+apt-get install htop vim
