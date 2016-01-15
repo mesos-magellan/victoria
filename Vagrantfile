@@ -20,24 +20,27 @@ Vagrant.configure(2) do |config|
   config.vm.provision :shell, path: "bootstrap/bootstrap.sh"
 
   config.vm.define "master" do |master|
-    master.vm.provision :shell, path: "bootstrap/mesos.sh"
-    master.vm.provision :shell, path: "bootstrap/master.sh"
     master.vm.network :private_network, ip: "10.144.144.10"
+    master.vm.provision :shell, path: "bootstrap/install_mesos.sh"
+    master.vm.provision :shell, path: "bootstrap/master.sh"
   end
 
   config.vm.define "agent001" do |agent001|
-    agent001.vm.provision :shell, path: "bootstrap/mesos.sh"
-    agent001.vm.provision :shell, path: "bootstrap/agent.sh"
+    agent001.vm.network :private_network, ip: "10.144.144.11"
+    agent001.vm.provision :shell, path: "bootstrap/install_mesos.sh"
     agent001.vm.provision "file", source: "bootstrap/mesos-slave", \
       destination: "/etc/default/mesos-slave"
-    agent001.vm.network :private_network, ip: "10.144.144.11"
+    agent001.vm.provision "shell", inline: <<-SHELL
+      sudo chmod 777 /etc/default/mesos-slave  # XXX hack so that vagrant scp can copy file over
+    SHELL
+    agent001.vm.provision :shell, path: "bootstrap/agent.sh"
   end
 
   config.vm.define "scheduler" do |scheduler|
-    # We need to install mesos because of required scheduler dependencies
-    scheduler.vm.provision :shell, path: "bootstrap/mesos.sh"
-    scheduler.vm.provision :shell, path: "bootstrap/scheduler.sh"
     scheduler.vm.network :private_network, ip: "10.144.144.12"
+    # We need to install mesos because of required scheduler dependencies
+    scheduler.vm.provision :shell, path: "bootstrap/install_mesos.sh"
+    scheduler.vm.provision :shell, path: "bootstrap/scheduler.sh"
   end
 
   # The most common configuration options are documented and commented below.
