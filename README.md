@@ -14,7 +14,7 @@
 * agent001 (10.144.144.11)
 * scheduler (10.144.144.12)
 
-```
+```bash
 # Bring up all machines
 vagrant up
 # Bring up specific ones with
