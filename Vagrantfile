@@ -24,6 +24,7 @@ Vagrant.configure(2) do |config|
   config.vm.provision :shell, path: "bootstrap/bootstrap.sh"
 
   config.vm.define "master" do |master|
+    master.vm.hostname = "master"
     master.vm.network :private_network, ip: "10.144.144.10"
     master.vm.provision :shell, path: "bootstrap/install_mesos.sh"
     master.vm.provision :shell, path: "bootstrap/master.sh"
@@ -36,6 +37,7 @@ Vagrant.configure(2) do |config|
     agent_num = "#{i}".rjust(3, '0')
     agent_name = "agent#{agent_num}"
     config.vm.define agent_name do |agent|
+      agent.vm.hostname = agent_name
       # Agents use different memory size than default
       agent.vm.provider "virtualbox" do |v|
         v.memory = AGENT_MEM
@@ -55,6 +57,7 @@ Vagrant.configure(2) do |config|
   end
 
   config.vm.define "scheduler" do |scheduler|
+    scheduler.vm.hostname = "scheduler"
     scheduler.vm.network :private_network, ip: "10.144.144.11"
     # We need to install mesos because of required scheduler dependencies
     scheduler.vm.provision :shell, path: "bootstrap/install_mesos.sh"
