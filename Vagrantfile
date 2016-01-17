@@ -34,7 +34,7 @@ Vagrant.configure(2) do |config|
     agent001.vm.provision "file", source: "bootstrap/mesos-slave", \
       destination: "/etc/default/mesos-slave"
     agent001.vm.provision :shell, path: "bootstrap/agent.sh"
-    scheduler.vm.synced_folder "../enrique", "/home/vagrant/enrique"
+    agent001.vm.synced_folder "../enrique", "/home/vagrant/enrique"
   end
 
   config.vm.define "scheduler" do |scheduler|
