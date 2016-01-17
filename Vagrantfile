@@ -43,6 +43,7 @@ Vagrant.configure(2) do |config|
     scheduler.vm.provision :shell, path: "bootstrap/install_mesos.sh"
     scheduler.vm.provision :shell, path: "bootstrap/scheduler.sh"
     scheduler.vm.synced_folder "../faleiro", "/home/vagrant/faleiro"
+    scheduler.vm.synced_folder "../miguel", "/home/vagrant/miguel"
   end
 
   # The most common configuration options are documented and commented below.

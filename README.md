@@ -2,6 +2,8 @@
 
 ## Quick Setup
 
+* Ensure that miguel, faleiro, and enrique repositories have been cloned
+at the same directory level as victoria
 * Install [Vagrant](https://www.vagrantup.com/downloads.html)
 * Install [VirtualBox](https://www.virtualbox.org/wiki/Downloads)
 * `vagrant plugin install vagrant-vbguest`
