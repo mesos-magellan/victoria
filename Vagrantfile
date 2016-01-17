@@ -7,6 +7,10 @@
 # you're doing.
 Vagrant.configure(2) do |config|
 
+  NUM_AGENTS = 2
+  AGENT_IP_RANGE_START = 100
+  AGENT_MEM = 256
+
   config.vm.box = "debian/jessie64"
   # XXX Hack to fix https://github.com/mitchellh/vagrant/issues/1673
   config.ssh.shell = "bash -c 'BASH_ENV=/etc/profile exec bash'"
@@ -25,20 +29,33 @@ Vagrant.configure(2) do |config|
     master.vm.provision :shell, path: "bootstrap/master.sh"
   end
 
-  config.vm.define "agent001" do |agent001|
-    agent001.vm.network :private_network, ip: "10.144.144.11"
-    agent001.vm.provision :shell, path: "bootstrap/install_mesos.sh"
-    agent001.vm.provision "shell", inline: <<-SHELL
-      sudo chmod 777 /etc/default/mesos-slave  # XXX hack so that vagrant scp can copy file over
-    SHELL
-    agent001.vm.provision "file", source: "bootstrap/mesos-slave", \
-      destination: "/etc/default/mesos-slave"
-    agent001.vm.provision :shell, path: "bootstrap/agent.sh"
-    agent001.vm.synced_folder "../enrique", "/home/vagrant/enrique"
+  if NUM_AGENTS > 254-AGENT_IP_RANGE_START
+    raise "Too many agents"
+  end
+  (1..NUM_AGENTS).each do |i|
+    agent_num = "#{i}".rjust(3, '0')
+    agent_name = "agent#{agent_num}"
+    config.vm.define agent_name do |agent|
+      # Agents use different memory size than default
+      agent.vm.provider "virtualbox" do |v|
+        v.memory = AGENT_MEM
+      end
+      # Define IP
+      agent.vm.network :private_network, ip: "10.144.144." + "#{AGENT_IP_RANGE_START+i}"
+      # Install mesos and setup mesos-slave
+      agent.vm.provision :shell, path: "bootstrap/install_mesos.sh"
+      agent.vm.provision "shell", inline: <<-SHELL
+        sudo chmod 777 /etc/default/mesos-slave  # XXX hack so that vagrant scp can copy file over
+      SHELL
+      agent.vm.provision "file", source: "bootstrap/mesos-slave", \
+        destination: "/etc/default/mesos-slave"
+      agent.vm.provision :shell, path: "bootstrap/agent.sh"
+      agent.vm.synced_folder "../enrique", "/home/vagrant/enrique"
+    end
   end
 
   config.vm.define "scheduler" do |scheduler|
-    scheduler.vm.network :private_network, ip: "10.144.144.12"
+    scheduler.vm.network :private_network, ip: "10.144.144.11"
     # We need to install mesos because of required scheduler dependencies
     scheduler.vm.provision :shell, path: "bootstrap/install_mesos.sh"
     scheduler.vm.provision :shell, path: "bootstrap/scheduler.sh"
