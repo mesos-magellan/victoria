@@ -5,3 +5,8 @@ export DEBIAN_FRONTEND=noninteractive
 
 apt-get update
 apt-get install htop vim -y
+
+# Install python dev things
+sudo apt-get install python-dev python-setuptools python-pip -y
+sudo pip install virtualenv
+sudo pip install whatportis
