@@ -12,3 +12,6 @@ sudo apt-get install python-dev python-setuptools python-pip -y
 sudo apt-get install libncurses5-dev libncursesw5-dev -y  # miguel requires curses
 cd /home/vagrant/miguel
 python setup.py develop
+
+## Install Maven
+sudo apt-get install maven
