@@ -43,14 +43,20 @@ Vagrant.configure(2) do |config|
         v.memory = AGENT_MEM
       end
       # Define IP
-      agent.vm.network :private_network, ip: "10.144.144." + "#{AGENT_IP_RANGE_START+i}"
+      agent_ip = "10.144.144." + "#{AGENT_IP_RANGE_START+i}"
+      agent.vm.network :private_network, ip: agent_ip
       # Install mesos and setup mesos-slave
       agent.vm.provision :shell, path: "bootstrap/install_mesos.sh"
-      agent.vm.provision "shell", inline: <<-SHELL
-        sudo chmod 777 /etc/default/mesos-slave  # XXX hack so that vagrant scp can copy file over
-      SHELL
-      agent.vm.provision "file", source: "bootstrap/mesos-slave", \
-        destination: "/etc/default/mesos-slave"
+
+      # Set the mesos-slave config file
+      mesos_slave_script = [
+        "rm /etc/default/mesos-slave",
+        "echo \"MASTER=10.144.144.10:5050\" >> /etc/default/mesos-slave",
+        "echo \"PORT=5041\" >> /etc/default/mesos-slave",
+        "echo \"IP=#{agent_ip}\" >> /etc/default/mesos-slave"
+      ].join("\n") + "\n"
+      agent.vm.provision :shell, inline: mesos_slave_script
+
       agent.vm.provision :shell, path: "bootstrap/agent.sh"
       agent.vm.synced_folder "../enrique", "/home/vagrant/enrique"
       # XXX
