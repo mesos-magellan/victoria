@@ -53,6 +53,8 @@ Vagrant.configure(2) do |config|
         destination: "/etc/default/mesos-slave"
       agent.vm.provision :shell, path: "bootstrap/agent.sh"
       agent.vm.synced_folder "../enrique", "/home/vagrant/enrique"
+      # XXX
+      agent.vm.synced_folder "../traveling-sailor", "/home/vagrant/traveling-sailor"
     end
   end
 
