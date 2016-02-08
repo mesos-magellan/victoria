@@ -1,7 +1,11 @@
 #!/bin/sh
 
+# Enable slave
 systemctl enable mesos-slave.service
 systemctl start mesos-slave.service
+# Disable master
+systemctl stop mesos-master.service
+systemctl disable mesos-master.service
 
 sudo apt-get install python-dev python-setuptools python-pip -y
 

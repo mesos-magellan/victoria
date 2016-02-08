@@ -1,5 +1,11 @@
 #!/bin/sh
 
+# Disable all mesos services
+systemctl stop mesos-master.service
+systemctl disable mesos-master.service
+systemctl stop mesos-slave.service
+systemctl disable mesos-slave.service
+
 ## Install zookeepercli
 cd /tmp
 # https://github.com/outbrain/zookeepercli/releases
