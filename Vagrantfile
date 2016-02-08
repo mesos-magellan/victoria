@@ -27,6 +27,16 @@ Vagrant.configure(2) do |config|
     master.vm.hostname = "master"
     master.vm.network :private_network, ip: "10.144.144.10"
     master.vm.provision :shell, path: "bootstrap/install_mesos.sh"
+
+    # Set the mesos-master config file
+    mesos_master_config = [
+      "rm /etc/default/mesos-master",
+      "echo \"PORT=5050\" >> /etc/default/mesos-master",
+      "echo \"ZK=`cat /etc/mesos/zk`\" >> /etc/default/mesos-master",
+      "echo \"IP=10.144.144.10\" >> /etc/default/mesos-master"
+    ].join("\n") + "\n"
+    master.vm.provision :shell, inline: mesos_master_config
+
     master.vm.provision :shell, path: "bootstrap/master.sh"
   end
 
@@ -49,13 +59,13 @@ Vagrant.configure(2) do |config|
       agent.vm.provision :shell, path: "bootstrap/install_mesos.sh"
 
       # Set the mesos-slave config file
-      mesos_slave_script = [
+      mesos_slave_config = [
         "rm /etc/default/mesos-slave",
         "echo \"MASTER=10.144.144.10:5050\" >> /etc/default/mesos-slave",
         "echo \"PORT=5041\" >> /etc/default/mesos-slave",
         "echo \"IP=#{agent_ip}\" >> /etc/default/mesos-slave"
       ].join("\n") + "\n"
-      agent.vm.provision :shell, inline: mesos_slave_script
+      agent.vm.provision :shell, inline: mesos_slave_config
 
       agent.vm.provision :shell, path: "bootstrap/agent.sh"
       agent.vm.synced_folder "../enrique", "/home/vagrant/enrique"
