@@ -27,7 +27,7 @@ miguel   faleiro   victoria   enrique
 
 * master (10.144.144.10)
    * Has the mesos-master service 
-* scheduler (10.144.144.11)
+* scheduler{i} (10.144.144.{20+i})
    * Runs faleiro
    * Has zookeepercli installed for convenience when debugging faleiro
    * Has miguel installed for faleiro usage (usable with `miguel --help`)
