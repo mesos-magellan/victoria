@@ -50,6 +50,7 @@ echo ARG_N=$ARG_N
 # Write zoo.cfg #
 #################
 
+sudo pip install click
 echo '
 import click
 
@@ -123,7 +124,7 @@ def main(num_scheds, ip_range_start):
 
 main()
 ' > get_zk_conf.py
-python get_zk_conf.py -n $ARG_N -r $ARG_R | tee #"${ZOOKEEPER_CONF_DIR}/zoo.cfg"
+python get_zk_conf.py -n $ARG_N -r $ARG_R | tee "${ZOOKEEPER_CONF_DIR}/zoo.cfg"
 rm get_zk_conf.py
 
 
@@ -131,4 +132,8 @@ rm get_zk_conf.py
 # Write myid #
 ##############
 
-echo "$ARG_I" | tee #"${ZOOKEEPER_CONF_DIR}/myid"
+echo "$ARG_I" | tee "${ZOOKEEPER_CONF_DIR}/myid"
+
+
+# Fin
+systemctl restart zookeeper.service

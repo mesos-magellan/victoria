@@ -81,7 +81,7 @@ Vagrant.configure(2) do |config|
   end
 
 
-  def configure_scheduler(scheduler, hostname, ip_address)
+  def configure_scheduler(i, scheduler, hostname, ip_address)
     scheduler.vm.hostname = hostname
     # Schedulers use different memory size than default
     scheduler.vm.provider "virtualbox" do |v|
@@ -91,6 +91,9 @@ Vagrant.configure(2) do |config|
     # We need to install mesos because of required scheduler dependencies
     scheduler.vm.provision :shell, path: "bootstrap/install_mesos.sh"
     scheduler.vm.provision :shell, path: "bootstrap/scheduler.sh"
+    scheduler.vm.provision :shell,
+      path: "bootstrap/scheduler/zookeeper_config.sh",
+      args: "-n #{NUM_SCHEDULERS} -r #{SCHED_IP_RANGE_START} -i #{i}"
     scheduler.vm.synced_folder "../faleiro", "/home/vagrant/faleiro"
     scheduler.vm.synced_folder "../miguel", "/home/vagrant/miguel"
   end
@@ -100,7 +103,7 @@ Vagrant.configure(2) do |config|
     sched_name = "scheduler#{sched_num}"
     sched_ip = "10.144.144." + "#{SCHED_IP_RANGE_START+i}"
     config.vm.define sched_name do |scheduler|
-      configure_scheduler(scheduler, sched_name, sched_ip)
+      configure_scheduler(i, scheduler, sched_name, sched_ip)
     end
   end
 
