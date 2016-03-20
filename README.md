@@ -18,6 +18,7 @@ miguel   faleiro   victoria   enrique
 * Install [Vagrant](https://www.vagrantup.com/downloads.html)
 * Install [VirtualBox](https://www.virtualbox.org/wiki/Downloads)
 * Install the vagrant-vbguest plugin: `vagrant plugin install vagrant-vbguest`
+* Install the landrush plugin: `vagrant plugin install landrush`
 
 * Start bringing up victoria: `vagrant up`
 

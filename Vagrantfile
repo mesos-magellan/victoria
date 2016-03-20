@@ -15,6 +15,8 @@ Vagrant.configure(2) do |config|
   SCHED_IP_RANGE_START = 20
   SCHEDULER_MEM = 384
 
+  config.landrush.enabled = true
+
   config.vm.box = "debian/jessie64"
   # XXX Hack to fix https://github.com/mitchellh/vagrant/issues/1673
   config.ssh.shell = "bash -c 'BASH_ENV=/etc/profile exec bash'"
@@ -79,7 +81,7 @@ Vagrant.configure(2) do |config|
   end
 
 
-  def configure_scheduler(scheduler, hostname, ip_address)
+  def configure_scheduler(i, scheduler, hostname, ip_address)
     scheduler.vm.hostname = hostname
     # Schedulers use different memory size than default
     scheduler.vm.provider "virtualbox" do |v|
@@ -89,6 +91,9 @@ Vagrant.configure(2) do |config|
     # We need to install mesos because of required scheduler dependencies
     scheduler.vm.provision :shell, path: "bootstrap/install_mesos.sh"
     scheduler.vm.provision :shell, path: "bootstrap/scheduler.sh"
+    scheduler.vm.provision :shell,
+      path: "bootstrap/scheduler/zookeeper_config.sh",
+      args: "-n #{NUM_SCHEDULERS} -r #{SCHED_IP_RANGE_START} -i #{i}"
     scheduler.vm.synced_folder "../faleiro", "/home/vagrant/faleiro"
     scheduler.vm.synced_folder "../miguel", "/home/vagrant/miguel"
   end
@@ -98,7 +103,7 @@ Vagrant.configure(2) do |config|
     sched_name = "scheduler#{sched_num}"
     sched_ip = "10.144.144." + "#{SCHED_IP_RANGE_START+i}"
     config.vm.define sched_name do |scheduler|
-      configure_scheduler(scheduler, sched_name, sched_ip)
+      configure_scheduler(i, scheduler, sched_name, sched_ip)
     end
   end
 
