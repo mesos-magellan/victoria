@@ -15,6 +15,8 @@ Vagrant.configure(2) do |config|
   SCHED_IP_RANGE_START = 20
   SCHEDULER_MEM = 384
 
+  config.landrush.enabled = true
+
   config.vm.box = "debian/jessie64"
   # XXX Hack to fix https://github.com/mitchellh/vagrant/issues/1673
   config.ssh.shell = "bash -c 'BASH_ENV=/etc/profile exec bash'"
