@@ -11,6 +11,10 @@ Vagrant.configure(2) do |config|
   AGENT_IP_RANGE_START = 100
   AGENT_MEM = 256
 
+  NUM_SCHEDULERS = 3
+  SCHED_IP_RANGE_START = 20
+  SCHEDULER_MEM = 384
+
   config.vm.box = "debian/jessie64"
   # XXX Hack to fix https://github.com/mitchellh/vagrant/issues/1673
   config.ssh.shell = "bash -c 'BASH_ENV=/etc/profile exec bash'"
@@ -74,14 +78,28 @@ Vagrant.configure(2) do |config|
     end
   end
 
-  config.vm.define "scheduler" do |scheduler|
-    scheduler.vm.hostname = "scheduler"
-    scheduler.vm.network :private_network, ip: "10.144.144.11"
+
+  def configure_scheduler(scheduler, hostname, ip_address)
+    scheduler.vm.hostname = hostname
+    # Schedulers use different memory size than default
+    scheduler.vm.provider "virtualbox" do |v|
+      v.memory = SCHEDULER_MEM
+    end
+    scheduler.vm.network :private_network, ip: ip_address
     # We need to install mesos because of required scheduler dependencies
     scheduler.vm.provision :shell, path: "bootstrap/install_mesos.sh"
     scheduler.vm.provision :shell, path: "bootstrap/scheduler.sh"
     scheduler.vm.synced_folder "../faleiro", "/home/vagrant/faleiro"
     scheduler.vm.synced_folder "../miguel", "/home/vagrant/miguel"
+  end
+
+  (1..NUM_SCHEDULERS).each do |i|
+    sched_num = "#{i}".rjust(3, '0')
+    sched_name = "scheduler#{sched_num}"
+    sched_ip = "10.144.144." + "#{SCHED_IP_RANGE_START+i}"
+    config.vm.define sched_name do |scheduler|
+      configure_scheduler(scheduler, sched_name, sched_ip)
+    end
   end
 
   # The most common configuration options are documented and commented below.
