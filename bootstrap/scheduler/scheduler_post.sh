@@ -1,3 +1,5 @@
+# Become root
+sudo su
 # Set up and start the scheduler
 cd faleiro
 # We only run build on scheduler001 as the environment is shared
