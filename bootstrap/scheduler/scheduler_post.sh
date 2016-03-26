@@ -7,8 +7,7 @@ if [[ `hostname` == "scheduler001"  ]]; then
     ./build.sh
 fi
 ./install.sh
-supervisord
-supervisorctl reload
+./run_supervisor.sh
 cd ..
 
 if [[ $(ps aux | grep frontail | grep -v grep) ]]; then
