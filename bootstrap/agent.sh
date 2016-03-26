@@ -24,4 +24,3 @@ cd /home/vagrant/enrique
 sudo python setup.py develop
 ### Others required by enrique
 sudo apt-get install git -y
-sudo pip install git-up
