@@ -1,5 +1,9 @@
 # Become root
-sudo su
+if [[ $EUID -ne 0 ]]; then
+    sudo su
+else
+    echo "Already root! :D"
+fi
 # Set up and start the scheduler
 cd faleiro
 # We only run build on scheduler001 as the environment is shared
@@ -13,8 +17,8 @@ fi
 cd ..
 
 if [[ $(ps aux | grep frontail | grep -v grep) ]]; then
-  echo "frontail already seems to be running. We'll kill the existing before continuing."
-  sudo pkill -f frontail
+    echo "frontail already seems to be running. We'll kill the existing before continuing."
+    sudo pkill -f frontail
 fi
 ## Start frontail daemon to view logs on 0.0.0.0:9050
 sudo frontail -p 9050 -n 500 -d --ui-highlight /var/log/faleiro/stderr.log
