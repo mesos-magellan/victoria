@@ -91,6 +91,7 @@ Vagrant.configure(2) do |config|
     # We need to install mesos because of required scheduler dependencies
     scheduler.vm.provision :shell, path: "bootstrap/install_mesos.sh"
     scheduler.vm.provision :shell, path: "bootstrap/scheduler/scheduler.sh"
+    scheduler.vm.provision :shell, path: "bootstrap/scheduler/config.sh"
     scheduler.vm.provision :shell,
       path: "bootstrap/scheduler/zookeeper_config.sh",
       args: "-n #{NUM_SCHEDULERS} -r #{SCHED_IP_RANGE_START} -i #{i}"

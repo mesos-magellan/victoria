@@ -30,11 +30,10 @@ sudo apt-get update -y
 ### https://askubuntu.com/questions/190582/installing-java-automatically-with-silent-option
 echo "oracle-java8-installer shared/accepted-oracle-license-v1-1 select true" | sudo debconf-set-selections
 sudo apt-get install oracle-java8-installer -y
-
+### Maven
 sudo apt-get install maven -y
-
+### supervisord
 sudo pip install supervisor
-
 
 ## Install nodejs
 if [[ $(dpkg -l | grep nodejs) ]]; then
