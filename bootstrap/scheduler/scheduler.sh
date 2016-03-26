@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # Disable all mesos services
 systemctl stop mesos-master.service
@@ -34,3 +34,14 @@ sudo apt-get install oracle-java8-installer -y
 sudo apt-get install maven -y
 
 sudo pip install supervisor
+
+
+## Install nodejs
+if [[ $(dpkg -l | grep nodejs) ]]; then
+  echo "nodejs seems to be installed already."
+else
+  curl -sL https://deb.nodesource.com/setup_4.x | sudo -E bash -
+  sudo apt-get install -y nodejs
+fi
+## Install frontail
+sudo npm install frontail -g

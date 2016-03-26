@@ -27,11 +27,12 @@ miguel   faleiro   victoria   enrique
 ### Machines
 
 * master (10.144.144.10)
-   * Has the mesos-master service 
+   * Has the mesos-master service
 * scheduler{i} (10.144.144.{20+i})
    * Runs faleiro
    * Has zookeepercli installed for convenience when debugging faleiro
    * Has miguel installed for faleiro usage (usable with `miguel --help`)
+   * stderr log from faleiro can be viewing by visiting 10.144.144.{20+i}:9050 in a browser
 * agent{i} (10.144.144.{100+i})
    * Number of agents is configurable in Vagrantfile
    * There are 2 agents by default (agent001 and agent002 at 10.144.144.101 and 10.144.144.102 respectively)

@@ -10,3 +10,10 @@ fi
 supervisord
 supervisorctl reload
 cd ..
+
+if [[ $(ps aux | grep frontail | grep -v grep) ]]; then
+  echo "frontail already seems to be running."
+else
+  ## Start frontail daemon to view logs on 0.0.0.0:9050
+  sudo frontail -p 9050 -n 500 -d /var/log/faleiro/stderr.log
+fi
