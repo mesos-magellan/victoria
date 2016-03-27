@@ -115,7 +115,7 @@ clientPort=2181
 @click.option("-r", "--ip-range-start", required=True,
               default=20, type=click.INT)
 def main(num_scheds, ip_range_start):
-    line = "server.{num}=10.144.144.{ip_end}:2888:3888"
+    line = "server.{num}=10.8.0.{ip_end}:2888:3888"
     print(ZOO_CONF.format(
         "\n".join(line.format(num=i, ip_end=i+ip_range_start)
                   for i in range(1, 1+num_scheds))

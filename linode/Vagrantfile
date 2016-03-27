@@ -29,6 +29,9 @@ Vagrant.configure('2') do |config|
   # Definition #
   ##############
 
+  NUM_SCHEDULERS = 3
+  SCHED_IP_RANGE_START = 20
+
   ## Base
   config.vm.provider :linode do |provider, override|
     set_linode_override_props(override)
@@ -53,5 +56,28 @@ Vagrant.configure('2') do |config|
     ].join("\n") + "\n"
     master.vm.provision :shell, inline: mesos_master_config
     master.vm.provision :shell, path: "bootstrap/master.sh"
+  end
+
+  ## scheduler
+  def configure_scheduler(i, scheduler, hostname)
+    scheduler.vm.hostname = hostname
+    set_machine_name(scheduler, hostname, "magellan")
+    scheduler.vm.provision :shell, path: "bootstrap/openvpn_client.sh",
+      args: "magellan_#{hostname}"
+    # We need to install mesos because of required scheduler dependencies
+    scheduler.vm.provision :shell, path: "bootstrap/install_mesos.sh"
+    scheduler.vm.provision :shell, path: "bootstrap/scheduler/scheduler.sh"
+    scheduler.vm.provision :shell, path: "bootstrap/scheduler/config.sh"
+    scheduler.vm.provision :shell,
+      path: "bootstrap/scheduler/zookeeper_config.sh",
+      args: "-n #{NUM_SCHEDULERS} -r #{SCHED_IP_RANGE_START} -i #{i}"
+    scheduler.vm.provision :shell, path: "bootstrap/scheduler/scheduler_post.sh"
+  end
+  (1..NUM_SCHEDULERS).each do |i|
+    sched_num = "#{i}".rjust(3, '0')
+    sched_name = "scheduler#{sched_num}"
+    config.vm.define sched_name do |scheduler|
+      configure_scheduler(i, scheduler, sched_name)
+    end
   end
 end
