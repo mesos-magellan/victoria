@@ -24,7 +24,7 @@ sudo pip install mesos.interface
 
 ## Install enrique
 cd /home/vagrant/enrique
-sudo pip install -r requirements.txt
 sudo python setup.py develop
+sudo pip install -r requirements.txt
 ### Others required by enrique
 sudo apt-get install git -y
