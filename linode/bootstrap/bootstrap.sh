@@ -5,7 +5,7 @@ export DEBIAN_FRONTEND=noninteractive
 
 apt-key update
 apt-get update
-apt-get install grc htop vim -y
+apt-get install sshguard grc htop vim -y
 
 # Install python dev things
 sudo apt-get install python-dev python-setuptools python-pip -y
