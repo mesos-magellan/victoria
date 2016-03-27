@@ -1,5 +1,9 @@
 #!/bin/bash
 
+MAGELLAN_BASE_INSTALL_DIR="/opt/magellan"
+mkdir -p $MAGELLAN_BASE_INSTALL_DIR
+MIGUEL_DIR="${MAGELLAN_BASE_INSTALL_DIR}/miguel"
+
 # Disable all mesos services
 systemctl stop mesos-master.service
 systemctl disable mesos-master.service
@@ -16,7 +20,18 @@ rm zookeepercli_1.0.10_amd64.deb
 ## Install miguel
 sudo apt-get install python-dev python-setuptools python-pip -y
 sudo apt-get install libncurses5-dev libncursesw5-dev -y  # miguel requires curses
-cd /home/vagrant/miguel
+if [[ -d $MIGUEL_DIR ]]; then
+  echo "miguel is already cloned; will update."
+  cd $MIGUEL_DIR
+  git reset --hard
+  git fetch
+else
+  echo "Cloning miguel for the first time"
+  cd $MAGELLAN_BASE_INSTALL_DIR
+  git clone https://github.com/mesos-magellan/miguel $MIGUEL_DIR
+  cd $MIGUEL_DIR
+fi
+git checkout origin/master
 python setup.py develop
 
 ## Install Maven and java

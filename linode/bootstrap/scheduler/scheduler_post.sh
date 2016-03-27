@@ -1,21 +1,27 @@
-# Become root
-if [[ $EUID -ne 0 ]]; then
-    sudo su
+#!/bin/bash
+
+MAGELLAN_BASE_INSTALL_DIR="/opt/magellan"
+FALEIRO_INSTALL_DIR="${MAGELLAN_BASE_INSTALL_DIR}/faleiro"
+
+# Download faleiro
+if [[ -d $FALEIRO_INSTALL_DIR ]]; then
+    echo "faleiro is already cloned; will update."
+    cd $FALEIRO_INSTALL_DIR
+    git reset --hard
+    git fetch
 else
-    echo "Already root! :D"
+    echo "Cloning faleiro for the first time"
+    cd $MAGELLAN_BASE_INSTALL_DIR
+    git clone https://github.com/mesos-magellan/faleiro $FALEIRO_INSTALL_DIR
+    cd $FALEIRO_INSTALL_DIR
 fi
+git checkout origin/master
 # Set up and start the scheduler
-cd faleiro
-# We only run build on scheduler001 as the environment is shared
-#  FIXME this will need to be changed if we deploy to Linode
-#  as we won't be relying on synced_folders
-if [[ `hostname` == "scheduler001"  ]]; then
-    ./build.sh
-fi
+./build.sh
 ./install.sh
 ./run_supervisor.sh
-cd ..
 
+# frontail for log viewing
 if [[ $(ps aux | grep frontail | grep -v grep) ]]; then
     echo "frontail already seems to be running. We'll kill the existing before continuing."
     sudo pkill -f frontail

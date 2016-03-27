@@ -4,10 +4,10 @@ echo "Hello from openvpn_client.sh!"
 
 CN_OVPN=$1
 
-apt-get install openvpn
+apt-get install openvpn -y
 set -x
 cp /vagrant/secrets/${CN_OVPN}.ovpn /etc/openvpn/${CN_OVPN}.conf
-systemctl enable openvpn@magellan_master.service
+systemctl enable openvpn@${CN_OVPN}.service
 systemctl start openvpn@${CN_OVPN}.service
 set +x
 
