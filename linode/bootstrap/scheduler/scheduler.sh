@@ -28,7 +28,7 @@ if [[ -d $MIGUEL_DIR ]]; then
 else
   echo "Cloning miguel for the first time"
   cd $MAGELLAN_BASE_INSTALL_DIR
-  git clone git@github.com:mesos-magellan/miguel $MIGUEL_DIR
+  git clone https://github.com/mesos-magellan/miguel $MIGUEL_DIR
   cd $MIGUEL_DIR
 fi
 git checkout origin/master

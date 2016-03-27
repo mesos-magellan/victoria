@@ -12,7 +12,7 @@ if [[ -d $FALEIRO_INSTALL_DIR ]]; then
 else
     echo "Cloning faleiro for the first time"
     cd $MAGELLAN_BASE_INSTALL_DIR
-    git clone git@github.com:mesos-magellan/miguel $FALEIRO_INSTALL_DIR
+    git clone https://github.com/mesos-magellan/faleiro $FALEIRO_INSTALL_DIR
     cd $FALEIRO_INSTALL_DIR
 fi
 git checkout origin/master
