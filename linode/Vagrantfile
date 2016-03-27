@@ -40,8 +40,18 @@ Vagrant.configure('2') do |config|
   ## master
   config.vm.define "master" do |master|
     master.vm.hostname = "master"
-    # master.vm.network :private_network, ip: "10.144.144.10"
-    set_machine_name(master, "master", "mesos-master")
+    set_machine_name(master, "master", "magellan")
+    master.vm.provision :shell, path: "bootstrap/openvpn_client.sh",
+      args: "magellan_master"
     master.vm.provision :shell, path: "bootstrap/install_mesos.sh"
+    # Set the mesos-master config file
+    mesos_master_config = [
+      "rm /etc/default/mesos-master",
+      "echo \"PORT=5050\" >> /etc/default/mesos-master",
+      "echo \"ZK=`cat /etc/mesos/zk`\" >> /etc/default/mesos-master",
+      "echo \"IP=10.8.0.10\" >> /etc/default/mesos-master"
+    ].join("\n") + "\n"
+    master.vm.provision :shell, inline: mesos_master_config
+    master.vm.provision :shell, path: "bootstrap/master.sh"
   end
 end

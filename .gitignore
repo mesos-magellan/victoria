@@ -1,2 +1,4 @@
 #####=== Vagrant ===#####
 .vagrant/
+
+linode/secrets
