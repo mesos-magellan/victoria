@@ -18,11 +18,6 @@ Vagrant.configure('2') do |config|
     provider.private_networking = true
   end
 
-  def prvr(path)
-    # path_relative_victoria_root
-    return File.join("..", "..", path)
-  end
-
   def set_machine_name(machine, label, group)
     machine.vm.provider :linode do |provider, override|
       provider.label = label
@@ -40,13 +35,13 @@ Vagrant.configure('2') do |config|
     set_linode_provider_machine_props(provider)
   end
   config.vm.provision "shell", inline: "echo Hello"
-  config.vm.provision :shell, path: prvr("bootstrap/bootstrap.sh")
+  config.vm.provision :shell, path: "bootstrap/bootstrap.sh"
 
   ## master
   config.vm.define "master" do |master|
     master.vm.hostname = "master"
     # master.vm.network :private_network, ip: "10.144.144.10"
     set_machine_name(master, "master", "mesos-master")
-    master.vm.provision :shell, path: prvr("bootstrap/install_mesos.sh")
+    master.vm.provision :shell, path: "bootstrap/install_mesos.sh"
   end
 end
