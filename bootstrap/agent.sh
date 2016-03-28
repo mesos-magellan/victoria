@@ -1,11 +1,11 @@
-#!/bin/sh
+#!/bin/bash
 
 # set slave hostname for mesos to IP
 echo "$(ip addr show eth1 | grep "inet\b" | awk '{print $2}' | cut -d/ -f1)" | sudo tee /etc/mesos-slave/hostname
 
 # Enable slave
 systemctl enable mesos-slave.service
-systemctl start mesos-slave.service
+systemctl restart mesos-slave.service
 # Disable master
 systemctl stop mesos-master.service
 systemctl disable mesos-master.service

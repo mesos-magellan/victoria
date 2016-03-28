@@ -1,11 +1,11 @@
-#!/bin/sh
+#!/bin/bash
 
 # set slave hostname for mesos to IP
-echo "$(ip addr show eth1 | grep "inet\b" | awk '{print $2}' | cut -d/ -f1)" | sudo tee /etc/mesos-slave/hostname
+echo "$(ip addr show tun0 | grep "inet\b" | awk '{print $2}' | cut -d/ -f1)" | sudo tee /etc/mesos-slave/hostname
 
 # Enable slave
 systemctl enable mesos-slave.service
-systemctl start mesos-slave.service
+systemctl restart mesos-slave.service
 # Disable master
 systemctl stop mesos-master.service
 systemctl disable mesos-master.service
@@ -22,9 +22,25 @@ if [ ! -f /tmp/mesos-0.27.0-py2.7-linux-x86_64.egg ]; then
 fi
 sudo pip install mesos.interface
 
+
 ## Install enrique
-cd /home/vagrant/enrique
-sudo python setup.py develop
-sudo pip install -r requirements.txt
+MAGELLAN_BASE_INSTALL_DIR="/opt/magellan"
+mkdir -p $MAGELLAN_BASE_INSTALL_DIR
+ENRIQUE_DIR="${MAGELLAN_BASE_INSTALL_DIR}/enrique"
+### git pull
+if [[ -d $ENRIQUE_DIR ]]; then
+  echo "enrique is already cloned; will update."
+  cd $ENRIQUE_DIR
+  git reset --hard
+  git fetch
+else
+  echo "Cloning enrique for the first time"
+  cd $MAGELLAN_BASE_INSTALL_DIR
+  git clone https://github.com/mesos-magellan/enrique $ENRIQUE_DIR
+  cd $ENRIQUE_DIR
+fi
+git checkout origin/master
+python setup.py develop
+pip install -r requirements.txt
 ### Others required by enrique
 sudo apt-get install git -y
