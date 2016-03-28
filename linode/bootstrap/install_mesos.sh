@@ -14,4 +14,4 @@ echo "deb http://repos.mesosphere.io/${DISTRO} ${CODENAME} main" | \
 sudo apt-get -y update
 
 # Install
-sudo apt-get -y install mesos
+sudo apt-get -y --force-yes install mesos
