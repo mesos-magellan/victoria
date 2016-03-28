@@ -35,10 +35,10 @@ set +x
   # root@debian:/etc/openvpn/staticclients# ls *
   # magellan_master  magellan_scheduler001	magellan_scheduler002  magellan_scheduler003
   # root@debian:/etc/openvpn/staticclients# cat *
-  # ifconfig-push 10.8.0.10 255.255.255.0
-  # ifconfig-push 10.8.0.21 255.255.255.0
-  # ifconfig-push 10.8.0.22 255.255.255.0
-  # ifconfig-push 10.8.0.23 255.255.255.0
+  # ifconfig-push 10.8.0.210 255.255.255.0
+  # ifconfig-push 10.8.0.221 255.255.255.0
+  # ifconfig-push 10.8.0.222 255.255.255.0
+  # ifconfig-push 10.8.0.223 255.255.255.0
   #
   # ## The following are important settings we must manualyl add to the
   #    server config
@@ -51,8 +51,8 @@ set +x
 #    be able to connect!
   # root@master:~# ip addr show tun0
   # 17: tun0: <POINTOPOINT,MULTICAST,NOARP,UP,LOWER_UP> mtu 1500 qdisc noqueue state UNKNOWN group default qlen 100
-  #     link/none
-  #     inet 10.8.0.10/24 brd 10.8.0.255 scope global tun0
-  #        valid_lft forever preferred_lft forever
-  #     inet6 fe80::17c1:c654:8b74:56ce/64 scope link flags 800
-  #        valid_lft forever preferred_lft forever
+  #   link/none
+  #   inet 10.8.0.210/24 brd 10.8.0.255 scope global tun0
+  #      valid_lft forever preferred_lft forever
+  #   inet6 fe80::cca:a260:e717:9659/64 scope link flags 800
+  #      valid_lft forever preferred_lft forever

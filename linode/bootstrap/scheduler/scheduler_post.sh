@@ -26,5 +26,6 @@ if [[ $(ps aux | grep frontail | grep -v grep) ]]; then
     echo "frontail already seems to be running. We'll kill the existing before continuing."
     sudo pkill -f frontail
 fi
+# FIXME this should only serve on the VPN interface!
 ## Start frontail daemon to view logs on 0.0.0.0:9050
 sudo frontail -p 9050 -n 500 -d --ui-highlight /var/log/faleiro/stderr.log

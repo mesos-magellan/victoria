@@ -35,7 +35,7 @@ Vagrant.configure('2') do |config|
   ##############
 
   NUM_SCHEDULERS = 3
-  SCHED_IP_RANGE_START = 20
+  SCHED_IP_RANGE_START = 220
 
   ## Base
   config.vm.provider :linode do |provider, override|
@@ -59,7 +59,7 @@ Vagrant.configure('2') do |config|
       "rm /etc/default/mesos-master",
       "echo \"PORT=5050\" >> /etc/default/mesos-master",
       "echo \"ZK=`cat /etc/mesos/zk`\" >> /etc/default/mesos-master",
-      "echo \"IP=10.8.0.10\" >> /etc/default/mesos-master"
+      "echo \"IP=10.8.0.210\" >> /etc/default/mesos-master"
     ].join("\n") + "\n"
     master.vm.provision :shell, inline: mesos_master_config
     master.vm.provision :shell, path: "bootstrap/master.sh"
@@ -90,7 +90,7 @@ Vagrant.configure('2') do |config|
   end
 
   ## Agents
-  NUM_AGENTS = 10
+  NUM_AGENTS = 50
   MAX_AGENTS = 100
 
   def configure_agent(i, agent, hostname)
@@ -105,7 +105,7 @@ Vagrant.configure('2') do |config|
     # Set the mesos-slave config file
     mesos_slave_config = [
       "rm /etc/default/mesos-slave",
-      "echo '10.8.0.10:5050' > /etc/mesos-slave/master",
+      "echo '10.8.0.210:5050' > /etc/mesos-slave/master",
       "echo 5041 > /etc/mesos-slave/port",
       "echo $(ip addr show tun0 | grep 'ine' | awk '{print $2}' | cut -d/ -f1 | python -c \"import sys; print(sys.stdin.read().split()[0])\") > /etc/mesos-slave/ip"
     ].join("\n") + "\n"
