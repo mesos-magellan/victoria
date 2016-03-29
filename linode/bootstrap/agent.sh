@@ -8,7 +8,7 @@ systemctl stop mesos-master.service
 systemctl disable mesos-master.service
 # Enable slave
 systemctl stop mesos-slave.service
-rm -rf /tmp/mesos/meta
+# rm -rf /tmp/mesos/meta  # XXX
 systemctl enable mesos-slave.service
 systemctl start mesos-slave.service
 
