@@ -90,7 +90,7 @@ Vagrant.configure('2') do |config|
   end
 
   ## Agents
-  NUM_AGENTS = 50
+  NUM_AGENTS = 100
   MAX_AGENTS = 100
 
   def configure_agent(i, agent, hostname)
